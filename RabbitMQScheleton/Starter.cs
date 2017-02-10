@@ -1,14 +1,16 @@
 using System;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using RabbitMQScheleton;
 
-namespace RabbitMQScheleton
+namespace RabbitMQSkeleton
 {
     public class Starter
     {
         private readonly Func<IModel> _channelFactory;
-        private readonly Func<IModel, MyConsumer> _consumerFactory;
+        private readonly Func<IModel, EventingBasicConsumer> _consumerFactory;
 
-        public Starter(Func<IModel> channelFactory, Func<IModel, MyConsumer> consumerFactory)
+        public Starter(Func<IModel> channelFactory, Func<IModel, EventingBasicConsumer> consumerFactory)
         {
             _channelFactory = channelFactory;
             _consumerFactory = consumerFactory;

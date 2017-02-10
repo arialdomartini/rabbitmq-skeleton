@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using RabbitMQSkeleton;
 
 namespace Runner
 {
@@ -6,7 +7,13 @@ namespace Runner
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<MyConsumerBusinessLogic>();
+            builder.RegisterType<MyConsumer>();
+
+            builder.RegisterType<BusinessLogic2>();
+            builder.RegisterType<BusinessLogic3>();
+
+            
+
         }
     }
 }

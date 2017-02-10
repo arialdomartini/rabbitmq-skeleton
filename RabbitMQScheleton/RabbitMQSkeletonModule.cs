@@ -2,13 +2,13 @@
 using Autofac;
 using RabbitMQ.Client;
 
-namespace RabbitMQScheleton
+namespace RabbitMQSkeleton
 {
-    public class RabbitMQScheletonModule : Module
+    public class RabbitMQSkeletonModule : Module
     {
         private readonly string _uri;
 
-        public RabbitMQScheletonModule(string uri)
+        public RabbitMQSkeletonModule(string uri)
         {
             _uri = uri;
         }
@@ -36,8 +36,8 @@ namespace RabbitMQScheleton
                 .OnActivated(e => {Console.WriteLine("Create a new channel");})
                 .OnRelease(e => {Console.WriteLine("Releasign the channel ");});
 
-            builder.RegisterType<MyConsumer>();
             builder.RegisterType<ScheletonSetup>();
+
             builder.RegisterType<DefaultConsumer>();
         }
     }

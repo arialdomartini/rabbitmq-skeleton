@@ -1,15 +1,18 @@
 using System;
 using System.Linq;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using RabbitMQScheleton;
 
-namespace RabbitMQScheleton
+namespace RabbitMQSkeleton
 {
     public class ScheletonSetup
     {
         private readonly Func<IModel> _channelFactory;
-        private readonly Func<IConsumerBusinessLogic, IModel, DefaultConsumer> _defaultConsumerFactory;
+        private readonly Func<Type, IConsumerBusinessLogic, IModel, DefaultConsumer> _defaultConsumerFactory;
 
-        public ScheletonSetup(Func<IModel> channelFactory, Func<IConsumerBusinessLogic, IModel, DefaultConsumer>  defaultConsumerFactory )
+
+        public ScheletonSetup(Func<IModel> channelFactory, Func<Type, IConsumerBusinessLogic, IModel, DefaultConsumer>  defaultConsumerFactory )
         {
             _channelFactory = channelFactory;
             _defaultConsumerFactory = defaultConsumerFactory;
@@ -17,13 +20,13 @@ namespace RabbitMQScheleton
         
         public void Setup(IRabbitSetup rabbitSetup)
         {
-            Console.WriteLine("## Settign up environment");
+            Console.WriteLine("## Setting up environment");
             var channel = _channelFactory();
 
             rabbitSetup.Execute(channel);
         }
 
-        public void RegisterConsumer(Func<IModel, MyConsumer> consumerFactory, int numberOfIntances)
+        public void RegisterConsumer(Func<IModel, EventingBasicConsumer> consumerFactory, int numberOfIntances, string queue)
         {
             Console.WriteLine("## Creating consumers and registering them");
             foreach (var i in Enumerable.Range(1, numberOfIntances))
@@ -31,15 +34,15 @@ namespace RabbitMQScheleton
                 Console.WriteLine($"## Creating consumer number {i} and registering it");
                 var channel = _channelFactory();
                 var consumer = consumerFactory(channel);
-                channel.BasicConsume(queue: "myqueue", noAck: true, consumer: consumer);
+                channel.BasicConsume(queue: queue, noAck: true, consumer: consumer);
             }
         }
 
-        public void RegisterConsumerDomainlogic(IConsumerBusinessLogic businessLogic, string queue)
+        public void RegisterConsumerDomainLogic<T>(IConsumerBusinessLogic businessLogic, string queue)
         {
             Console.WriteLine($"## Creating a default consumer with the given domain logic and registering it");
             var channel = _channelFactory();
-            var consumer = _defaultConsumerFactory(businessLogic, channel);
+            var consumer = _defaultConsumerFactory(typeof(T), businessLogic, channel);
             channel.BasicConsume(queue: queue, noAck: true, consumer: consumer);
         }
     }
