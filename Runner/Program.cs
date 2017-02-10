@@ -36,7 +36,11 @@ namespace Runner
                 
                 
                 var businessLogic2 = container.Resolve<Func<BusinessLogic2>>();
-//                RegisterConsumerDomainLogic(container, new SetupQueue2(), businessLogic2);
+                RegisterConsumerDomainLogic(container, new SetupQueue2(), businessLogic2);
+
+
+                RegisterConsumerDomainLogic<Payload2>(container, new SetupQueue2());
+
                 RegisterConsumerDomainLogic<Payload2, BusinessLogic2>(container, new SetupQueue2());
 
     
@@ -48,19 +52,18 @@ namespace Runner
         }
 
 
-        public string Setup(IContainer container, IRabbitSetup rabbitSetup)
+        public string Setup(IRabbitSetup rabbitSetup, IModel resolve)
         {
             Console.WriteLine("## Setting up environment");
-            var channel = container.Resolve<IModel>();
 
-            return rabbitSetup.Execute(channel);
+            return rabbitSetup.Execute(resolve);
         }
 
 
         private void RegisterConsumerDomainLogic<TPayload, TBusinessLogic>(IContainer container, IRabbitSetup rabbitSetup) where TBusinessLogic : IConsumerBusinessLogic<TPayload>
         {
             var channel = container.Resolve<IModel>();
-            var queue = Setup(container, rabbitSetup);
+            var queue = Setup(rabbitSetup, channel);
 
             Console.WriteLine($"## Creating a default consumer with the given domain logic and registering it");
 
@@ -73,20 +76,34 @@ namespace Runner
         }
 
 
-        public void RegisterConsumerDomainLogic<T>(IContainer container, IRabbitSetup rabbitSetup, Func<IConsumerBusinessLogic<T>> businessLogic)
+        public void RegisterConsumerDomainLogic<TPayload>(IContainer container, IRabbitSetup rabbitSetup, Func<IConsumerBusinessLogic<TPayload>> businessLogic)
         {
             var channel = container.Resolve<IModel>();
-            var queue = Setup(container, rabbitSetup);
+            var queue = Setup(rabbitSetup, channel);
 
             Console.WriteLine($"## Creating a default consumer with the given domain logic and registering it");
             
-            var defaultConsumerFactory = container.Resolve<Func<IModel, IConsumerBusinessLogic<T>, DefaultConsumer<T>>>();
+            var defaultConsumerFactory = container.Resolve<Func<IModel, IConsumerBusinessLogic<TPayload>, DefaultConsumer<TPayload>>>();
 
             var defaultConsumer = defaultConsumerFactory(channel, businessLogic());
             
             channel.BasicConsume(queue: queue, noAck: true, consumer: defaultConsumer);
         }
 
+        public void RegisterConsumerDomainLogic<TPaylod>(IContainer container, IRabbitSetup rabbitSetup)
+        {
+            var channel = container.Resolve<IModel>();
+            var queue = Setup(rabbitSetup, channel);
+
+            Console.WriteLine($"## Creating a default consumer with the given domain logic and registering it");
+
+            var defaultConsumerFactory = container.Resolve<Func<IModel, IConsumerBusinessLogic<TPaylod>, DefaultConsumer<TPaylod>>>();
+
+            var businessLogic = container.Resolve<IConsumerBusinessLogic<TPaylod>>();
+            var defaultConsumer = defaultConsumerFactory(channel, businessLogic);
+
+            channel.BasicConsume(queue: queue, noAck: true, consumer: defaultConsumer);
+        }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using RabbitMQSkeleton;
 
 namespace Runner
 {
@@ -8,7 +9,8 @@ namespace Runner
         {
             builder.RegisterType<MyConsumer>();
 
-            builder.RegisterType<BusinessLogic2>();
+            builder.RegisterType<BusinessLogic2>().AsSelf();
+            builder.RegisterType<BusinessLogic2>().As<IConsumerBusinessLogic<Payload2>>();
             builder.RegisterType<BusinessLogic3>();
             builder.RegisterType<MyExtendedConsumer>();
 
