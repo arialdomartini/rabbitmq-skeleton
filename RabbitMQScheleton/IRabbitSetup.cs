@@ -4,6 +4,6 @@ namespace RabbitMQScheleton
 {
     public interface IRabbitSetup
     {
-        void Execute(IModel channel);
+        string Execute(IModel channel);
     }
 }

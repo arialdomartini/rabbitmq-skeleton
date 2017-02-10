@@ -42,15 +42,13 @@ namespace Runner
                 //                scheletonSetup.RegisterConsumer(consumerFactory, 5, Queue1);
 
                 var scheletonSetup2 = container.Resolve<ScheletonSetup<Payload2>>();
-                scheletonSetup2.Setup(new SetupQueue2());
                 var businessLogic2 = container.Resolve<BusinessLogic2>();
-                scheletonSetup2.RegisterConsumerDomainLogic(businessLogic2, Queue2);
+                scheletonSetup2.RegisterConsumerDomainLogic(new SetupQueue2(), businessLogic2);
 
 
                 var scheletonSetup3 = container.Resolve<ScheletonSetup<Payload3>>();
-                scheletonSetup3.Setup(new SetupQueue3());
                 var businessLogic3 = container.Resolve<BusinessLogic3>();
-                scheletonSetup3.RegisterConsumerDomainLogic(businessLogic3, Queue3);
+                scheletonSetup3.RegisterConsumerDomainLogic(new SetupQueue3(), businessLogic3);
 
 
                 Console.WriteLine("## Waiting.... Press Enter to stop");

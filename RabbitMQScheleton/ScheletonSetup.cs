@@ -19,12 +19,12 @@ namespace RabbitMQSkeleton
             _defaultConsumerFactory = defaultConsumerFactory;
         }
         
-        public void Setup(IRabbitSetup rabbitSetup)
+        public string Setup(IRabbitSetup rabbitSetup)
         {
             Console.WriteLine("## Setting up environment");
             var channel = _channelFactory();
 
-            rabbitSetup.Execute(channel);
+            return rabbitSetup.Execute(channel);
         }
 
         public void RegisterConsumer(Func<IModel, EventingBasicConsumer> consumerFactory, int numberOfIntances, string queue)
@@ -39,8 +39,10 @@ namespace RabbitMQSkeleton
             }
         }
 
-        public void RegisterConsumerDomainLogic(IConsumerBusinessLogic<T> businessLogic, string queue)
+        public void RegisterConsumerDomainLogic(IRabbitSetup rabbitSetup, IConsumerBusinessLogic<T> businessLogic)
         {
+            var queue = Setup(rabbitSetup);
+
             Console.WriteLine($"## Creating a default consumer with the given domain logic and registering it");
             var channel = _channelFactory();
 
@@ -48,5 +50,6 @@ namespace RabbitMQSkeleton
 
             channel.BasicConsume(queue: queue, noAck: true, consumer: defaultConsumer);
         }
+        
     }
 }
