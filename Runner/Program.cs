@@ -27,14 +27,14 @@ namespace Runner
 
             using (var container = builder.Build())
             {
-                Console.WriteLine("## Requesting a Starter");
+                Console.WriteLine("## Requesting a ScheletonSetup");
 
-                var starter = container.Resolve<Starter>();
-                var configuration = new MyRabbitSetup();
-                starter.Setup(configuration);
+                var scheletonSetup = container.Resolve<ScheletonSetup>();
+                scheletonSetup.Setup(new Setup1());
+                scheletonSetup.Setup(new Setup2());
 
-                starter.Start();
-
+                var consumerFactory = container.Resolve<Func<IModel, MyConsumer>>();
+                scheletonSetup.RegisterConsumer(consumerFactory, 5);
 
                 Console.WriteLine("## Waiting.... Press Enter to stop");
                 Console.ReadLine();
@@ -44,11 +44,21 @@ namespace Runner
         }
     }
 
-    internal class MyRabbitSetup : IRabbitSetup
+    internal class Setup1 : IRabbitSetup
     {
         public void Execute(IModel channel)
         {
             channel.QueueDeclare("myqueue", durable: true, exclusive: true, autoDelete: false);
+        }
+    }
+
+
+    internal class Setup2 : IRabbitSetup
+    {
+        public void Execute(IModel channel)
+        {
+            channel.QueueDeclare("foo", durable: true, exclusive: true, autoDelete: false);
+            channel.QueueDeclare("", durable: true, exclusive: true, autoDelete: false);
         }
     }
 }

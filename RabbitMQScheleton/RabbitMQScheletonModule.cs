@@ -37,7 +37,7 @@ namespace RabbitMQScheleton
                 .OnRelease(e => {Console.WriteLine("Releasign the channel ");});
 
             builder.RegisterType<MyConsumer>();
-            builder.RegisterType<Starter>();
+            builder.RegisterType<ScheletonSetup>();
         }
     }
 }

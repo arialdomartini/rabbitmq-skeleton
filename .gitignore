@@ -1,4 +1,10 @@
 **/bin/**
+
 **/obj/**
+
 *.suo
+
 *.DotSettings
+
+packages/**
+*.user
