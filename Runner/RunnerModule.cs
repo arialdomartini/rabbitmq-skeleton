@@ -12,9 +12,6 @@ namespace Runner
             builder.RegisterType<BusinessLogic2>().AsSelf();
             builder.RegisterType<BusinessLogic2>().As<IConsumerBusinessLogic<Payload2>>();
             builder.RegisterType<BusinessLogic3>();
-            builder.RegisterType<MyExtendedConsumer>();
-
-            builder.RegisterGeneric(typeof(NewSetupper<>));
-        }
+            builder.RegisterType<MyExtendedConsumer>();        }
     }
 }

@@ -40,13 +40,7 @@ namespace RabbitMQSkeleton
 
             builder.RegisterGeneric( typeof(DefaultConsumer<>));
 
-//            var openType = typeof(DefaultConsumer<>);
-//
-//            builder.Register<Func<object, DefaultConsumer>>((context, theObject) =>
-//              {
-//                var concreteType = openType.MakeGenericType(theObject.GetType());
-//                return (DefaultConsumer)context.Resolve(concreteType, new PositionalParameter(0, theObject));
-//            });
+            builder.RegisterGeneric(typeof(NewSetupper<>));
 
         }
     }

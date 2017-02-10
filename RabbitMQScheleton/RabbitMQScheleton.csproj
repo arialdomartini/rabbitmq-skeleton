@@ -56,6 +56,7 @@
     <Compile Include="DefaultConsumer.cs" />
     <Compile Include="IConsumerBusinessLogic.cs" />
     <Compile Include="IRabbitSetup.cs" />
+    <Compile Include="NewSetupper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RabbitMQSkeletonModule.cs" />
     <Compile Include="ScheletonSetup.cs" />
