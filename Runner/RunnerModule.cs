@@ -14,7 +14,7 @@ namespace Runner
             builder.RegisterType<BusinessLogic3>();
             builder.RegisterType<MyExtendedConsumer>();
 
-            
+            builder.RegisterGeneric(typeof(NewSetupper<>));
         }
     }
 }

@@ -43,7 +43,11 @@ namespace Runner
 
                 RegisterConsumerDomainLogic<Payload2, BusinessLogic2>(container, new SetupQueue2());
 
-    
+
+                var newSetupper = container.Resolve<NewSetupper<Payload2>>();
+
+                newSetupper.RegisterConsumerDomainLogic(new SetupQueue2());
+
                 Console.WriteLine("## Waiting.... Press Enter to stop");
                 Console.ReadLine();
             }
@@ -104,6 +108,41 @@ namespace Runner
 
             channel.BasicConsume(queue: queue, noAck: true, consumer: defaultConsumer);
         }
-
     }
+
+    class NewSetupper<TPayload>
+    {
+        private readonly Func<IModel> _channelFactory;
+        private readonly Func<IModel, IConsumerBusinessLogic<TPayload>, DefaultConsumer<TPayload>> _defaultConsumerFactory;
+        private readonly Func<IModel, IConsumerBusinessLogic<TPayload>> _businessLogicFactory;
+
+        public NewSetupper(Func<IModel> channelFactory, Func<IModel, IConsumerBusinessLogic<TPayload>, DefaultConsumer<TPayload>> defaultConsumerFactory, Func<IModel, IConsumerBusinessLogic<TPayload>> businessLogicFactory )
+        {
+            _channelFactory = channelFactory;
+            _defaultConsumerFactory = defaultConsumerFactory;
+            _businessLogicFactory = businessLogicFactory;
+        }
+
+        public void RegisterConsumerDomainLogic(IRabbitSetup rabbitSetup)
+        {
+            var channel = _channelFactory();
+            var queue = Setup(rabbitSetup, channel);
+
+            Console.WriteLine($"## Creating a default consumer with the given domain logic and registering it");
+
+            var consumerBusinessLogic = _businessLogicFactory(channel);
+            var defaultConsumer = _defaultConsumerFactory(channel, consumerBusinessLogic);
+
+            channel.BasicConsume(queue: queue, noAck: true, consumer: defaultConsumer);
+        }
+
+
+        public string Setup(IRabbitSetup rabbitSetup, IModel resolve)
+        {
+            Console.WriteLine("## Setting up environment");
+
+            return rabbitSetup.Execute(resolve);
+        }
+    }
+
 }
