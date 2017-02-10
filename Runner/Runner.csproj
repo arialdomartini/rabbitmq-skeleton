@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="BusinessLogic.cs" />
     <Compile Include="MyConsumer.cs" />
+    <Compile Include="MyExtendedConsumer.cs" />
     <Compile Include="Payload.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
