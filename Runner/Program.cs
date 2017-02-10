@@ -1,7 +1,6 @@
 ﻿using System;
 using Autofac;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using RabbitMQSkeleton;
 
 namespace Runner
@@ -44,12 +43,12 @@ namespace Runner
 
                 scheletonSetup.Setup(new SetupQueue2());
                 var businessLogic2 = container.Resolve<BusinessLogic2>();
-                scheletonSetup.RegisterConsumerDomainLogic<Payload2>(businessLogic2, Queue2);
+                scheletonSetup.RegisterConsumerDomainLogic(businessLogic2, Queue2);
 
 
                 scheletonSetup.Setup(new SetupQueue3());
                 var businessLogic3 = container.Resolve<BusinessLogic3>();
-                scheletonSetup.RegisterConsumerDomainLogic<BusinessLogic3>(businessLogic3,  Queue3);
+                scheletonSetup.RegisterConsumerDomainLogic(businessLogic3, Queue3);
 
 
                 Console.WriteLine("## Waiting.... Press Enter to stop");

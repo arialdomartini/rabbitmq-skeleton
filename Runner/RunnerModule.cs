@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using RabbitMQSkeleton;
 
 namespace Runner
 {
@@ -11,9 +10,6 @@ namespace Runner
 
             builder.RegisterType<BusinessLogic2>();
             builder.RegisterType<BusinessLogic3>();
-
-            
-
         }
     }
 }

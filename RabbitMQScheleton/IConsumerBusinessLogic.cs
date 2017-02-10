@@ -1,7 +1,7 @@
 ﻿namespace RabbitMQSkeleton
 {
-    public interface IConsumerBusinessLogic
+    public interface IConsumerBusinessLogic<T>
     {
-        void Handle<T>(T message);
+        void Handle(T message);
     }
 }
