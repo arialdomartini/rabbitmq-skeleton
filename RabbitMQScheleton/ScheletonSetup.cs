@@ -7,12 +7,12 @@ namespace RabbitMQScheleton
     public class ScheletonSetup
     {
         private readonly Func<IModel> _channelFactory;
-        private readonly Func<IModel, MyConsumer> _consumerFactory;
+        private readonly Func<IConsumerBusinessLogic, IModel, DefaultConsumer> _defaultConsumerFactory;
 
-        public ScheletonSetup(Func<IModel> channelFactory, Func<IModel, MyConsumer> consumerFactory)
+        public ScheletonSetup(Func<IModel> channelFactory, Func<IConsumerBusinessLogic, IModel, DefaultConsumer>  defaultConsumerFactory )
         {
             _channelFactory = channelFactory;
-            _consumerFactory = consumerFactory;
+            _defaultConsumerFactory = defaultConsumerFactory;
         }
         
         public void Setup(IRabbitSetup rabbitSetup)
@@ -30,9 +30,17 @@ namespace RabbitMQScheleton
             {
                 Console.WriteLine($"## Creating consumer number {i} and registering it");
                 var channel = _channelFactory();
-                var consumer = _consumerFactory(channel);
+                var consumer = consumerFactory(channel);
                 channel.BasicConsume(queue: "myqueue", noAck: true, consumer: consumer);
             }
+        }
+
+        public void RegisterConsumerDomainlogic(IConsumerBusinessLogic businessLogic, string queue)
+        {
+            Console.WriteLine($"## Creating a default consumer with the given domain logic and registering it");
+            var channel = _channelFactory();
+            var consumer = _defaultConsumerFactory(businessLogic, channel);
+            channel.BasicConsume(queue: queue, noAck: true, consumer: consumer);
         }
     }
 }

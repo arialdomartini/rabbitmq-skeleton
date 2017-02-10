@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IConsumerBusinessLogic.cs" />
     <Compile Include="IRabbitSetup.cs" />
     <Compile Include="MyConsumer.cs" />
     <Compile Include="Payload.cs" />

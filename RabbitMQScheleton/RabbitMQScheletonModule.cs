@@ -38,6 +38,7 @@ namespace RabbitMQScheleton
 
             builder.RegisterType<MyConsumer>();
             builder.RegisterType<ScheletonSetup>();
+            builder.RegisterType<DefaultConsumer>();
         }
     }
 }
