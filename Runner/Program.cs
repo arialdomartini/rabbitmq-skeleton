@@ -34,21 +34,23 @@ namespace Runner
             {
                 Console.WriteLine("## Requesting a ScheletonSetup");
 
-                var scheletonSetup = container.Resolve<ScheletonSetup>();
+                //                var scheletonSetup = container.Resolve<ScheletonSetup>();
+                //
+                //                scheletonSetup.Setup(new SetupQueue1());
+                //
+                //                var consumerFactory = container.Resolve<Func<IModel, MyConsumer>>();
+                //                scheletonSetup.RegisterConsumer(consumerFactory, 5, Queue1);
 
-                scheletonSetup.Setup(new SetupQueue1());
-
-                var consumerFactory = container.Resolve<Func<IModel, MyConsumer>>();
-                scheletonSetup.RegisterConsumer(consumerFactory, 5, Queue1);
-
-                scheletonSetup.Setup(new SetupQueue2());
+                var scheletonSetup2 = container.Resolve<ScheletonSetup<Payload2>>();
+                scheletonSetup2.Setup(new SetupQueue2());
                 var businessLogic2 = container.Resolve<BusinessLogic2>();
-                scheletonSetup.RegisterConsumerDomainLogic(businessLogic2, Queue2);
+                scheletonSetup2.RegisterConsumerDomainLogic(businessLogic2, Queue2);
 
 
-                scheletonSetup.Setup(new SetupQueue3());
+                var scheletonSetup3 = container.Resolve<ScheletonSetup<Payload3>>();
+                scheletonSetup3.Setup(new SetupQueue3());
                 var businessLogic3 = container.Resolve<BusinessLogic3>();
-                scheletonSetup.RegisterConsumerDomainLogic(businessLogic3, Queue3);
+                scheletonSetup3.RegisterConsumerDomainLogic(businessLogic3, Queue3);
 
 
                 Console.WriteLine("## Waiting.... Press Enter to stop");

@@ -6,23 +6,18 @@ using RabbitMQScheleton;
 
 namespace RabbitMQSkeleton
 {
-    public class ScheletonSetup
+    public class ScheletonSetup<T>
     {
         private readonly Func<IModel> _channelFactory;
 
-        public ScheletonSetup(Func<IModel> channelFactory)
+        private readonly Func<IConsumerBusinessLogic<T>, IModel, DefaultConsumer<T>> _defaultConsumerFactory;
+
+
+        public ScheletonSetup(Func<IModel> channelFactory, Func<IConsumerBusinessLogic<T>, IModel, DefaultConsumer<T>>  defaultConsumerFactory )
         {
             _channelFactory = channelFactory;
+            _defaultConsumerFactory = defaultConsumerFactory;
         }
-
-//        private readonly Func<Type, IConsumerBusinessLogic, IModel, DefaultConsumer> _defaultConsumerFactory;
-//
-//
-//        public ScheletonSetup(Func<IModel> channelFactory, Func<Type, IConsumerBusinessLogic, IModel, DefaultConsumer>  defaultConsumerFactory )
-//        {
-//            _channelFactory = channelFactory;
-//            _defaultConsumerFactory = defaultConsumerFactory;
-//        }
         
         public void Setup(IRabbitSetup rabbitSetup)
         {
@@ -44,16 +39,13 @@ namespace RabbitMQSkeleton
             }
         }
 
-        public void RegisterConsumerDomainLogic<T>(IConsumerBusinessLogic<T> businessLogic, string queue)
+        public void RegisterConsumerDomainLogic(IConsumerBusinessLogic<T> businessLogic, string queue)
         {
             Console.WriteLine($"## Creating a default consumer with the given domain logic and registering it");
             var channel = _channelFactory();
 
+            var defaultConsumer = _defaultConsumerFactory(businessLogic, channel);
 
-            /// FIXME qui voglio usare AutoFac, non un new!
-            var defaultConsumer = new DefaultConsumer<T>(channel, businessLogic);
-
-//            var consumer = _defaultConsumerFactory(typeof(T), businessLogic, channel);
             channel.BasicConsume(queue: queue, noAck: true, consumer: defaultConsumer);
         }
     }

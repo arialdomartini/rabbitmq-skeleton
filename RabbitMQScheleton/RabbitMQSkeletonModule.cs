@@ -36,9 +36,9 @@ namespace RabbitMQSkeleton
                 .OnActivated(e => {Console.WriteLine("Create a new channel");})
                 .OnRelease(e => {Console.WriteLine("Releasign the channel ");});
 
-            builder.RegisterType<ScheletonSetup>();
+            builder.RegisterGeneric(typeof(ScheletonSetup<>));
 
-            //            builder.RegisterType<DefaultConsumer>();
+            builder.RegisterGeneric( typeof(DefaultConsumer<>));
 
 //            var openType = typeof(DefaultConsumer<>);
 //
