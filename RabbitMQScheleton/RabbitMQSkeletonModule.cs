@@ -41,6 +41,7 @@ namespace RabbitMQSkeleton
             builder.RegisterGeneric( typeof(DefaultConsumer<>));
 
             builder.RegisterGeneric(typeof(NewSetupper<>));
+            builder.RegisterGeneric(typeof(NewSetupper2<,>));
 
         }
     }

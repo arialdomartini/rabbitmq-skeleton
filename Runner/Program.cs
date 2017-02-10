@@ -45,8 +45,12 @@ namespace Runner
 
 
                 var newSetupper = container.Resolve<NewSetupper<Payload2>>();
-
                 newSetupper.RegisterConsumerDomainLogic(new SetupQueue2());
+
+
+                var newSetupper2 = container.Resolve<NewSetupper2<Payload2, BusinessLogic2>>();
+                newSetupper2.RegisterConsumerDomainLogic(new SetupQueue2());
+
 
                 Console.WriteLine("## Waiting.... Press Enter to stop");
                 Console.ReadLine();

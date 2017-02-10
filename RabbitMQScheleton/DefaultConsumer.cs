@@ -6,12 +6,12 @@ using RabbitMQ.Client.Events;
 
 namespace RabbitMQSkeleton
 {
-    public class DefaultConsumer<T> : EventingBasicConsumer
+    public class DefaultConsumer<TPayload> : EventingBasicConsumer
     {
         private readonly IModel _channel;
-        private readonly IConsumerBusinessLogic<T> _consumerBusinessLogic;
+        private readonly IConsumerBusinessLogic<TPayload> _consumerBusinessLogic;
 
-        public DefaultConsumer(IModel channel, IConsumerBusinessLogic<T> consumerBusinessLogic) : base(channel)
+        public DefaultConsumer(IModel channel, IConsumerBusinessLogic<TPayload> consumerBusinessLogic) : base(channel)
         {
             _channel = channel;
             _consumerBusinessLogic = consumerBusinessLogic;
@@ -20,12 +20,12 @@ namespace RabbitMQSkeleton
         public override void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey,
             IBasicProperties properties, byte[] body)
         {
-            var payload = default(T);
+            var payload = default(TPayload);
             string message = null;
             try
             {
                 message = Encoding.UTF8.GetString(body);
-                payload = JsonConvert.DeserializeObject<T>(message);
+                payload = JsonConvert.DeserializeObject<TPayload>(message);
             }
             catch (Exception e)
             {
