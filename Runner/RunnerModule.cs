@@ -10,6 +10,9 @@ namespace Runner
 
             builder.RegisterType<BusinessLogic2>();
             builder.RegisterType<BusinessLogic3>();
+            builder.RegisterType<MyExtendedConsumer>();
+
+            
         }
     }
 }

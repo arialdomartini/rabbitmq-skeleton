@@ -46,10 +46,13 @@ namespace Runner
                 scheletonSetup2.RegisterConsumerDomainLogic(new SetupQueue2(), businessLogic2);
 
 
-                var scheletonSetup3 = container.Resolve<ScheletonSetup<Payload3>>();
-                var businessLogic3 = container.Resolve<BusinessLogic3>();
-                scheletonSetup3.RegisterConsumerDomainLogic(new SetupQueue3(), businessLogic3);
+//                var scheletonSetup3 = container.Resolve<ScheletonSetup<Payload3>>();
+//                var businessLogic3 = container.Resolve<BusinessLogic3>();
+//                scheletonSetup3.RegisterConsumerDomainLogic(new SetupQueue3(), businessLogic3);
 
+
+                var myExtendedConsumer = container.Resolve<MyExtendedConsumer>();
+                myExtendedConsumer.Register();
 
                 Console.WriteLine("## Waiting.... Press Enter to stop");
                 Console.ReadLine();
@@ -58,4 +61,24 @@ namespace Runner
             Console.ReadLine();
         }
     }
+
+    class MyExtendedConsumer : DefaultBaseConsumer<Payload3>
+    {
+        public MyExtendedConsumer(IModel channel) : base(channel)
+        {
+        }
+
+        protected override void Handle(Payload3 payload)
+        {
+            Console.WriteLine("ricevuto");
+        }
+
+        protected override string Setup(IModel channel)
+        {
+            channel.QueueDeclare(Program.Queue3, durable: true, exclusive: true, autoDelete: false);
+            channel.BasicConsume(Program.Queue3, noAck: true, consumer: this);
+            return Program.Queue3;
+        }
+    }
+
 }

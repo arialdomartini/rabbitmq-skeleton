@@ -1,5 +1,4 @@
 ﻿using RabbitMQ.Client;
-using RabbitMQScheleton;
 using RabbitMQSkeleton;
 
 namespace Runner

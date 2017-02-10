@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using RabbitMQScheleton;
 
 namespace RabbitMQSkeleton
 {

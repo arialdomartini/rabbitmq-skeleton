@@ -1,6 +1,6 @@
 ﻿using RabbitMQ.Client;
 
-namespace RabbitMQScheleton
+namespace RabbitMQSkeleton
 {
     public interface IRabbitSetup
     {

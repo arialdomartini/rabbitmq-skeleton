@@ -1,7 +1,6 @@
 using System;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using RabbitMQScheleton;
 
 namespace RabbitMQSkeleton
 {
